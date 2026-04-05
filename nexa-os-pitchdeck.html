@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexa OS — Investor Pitch Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #020408;
+  --deep: #050c14;
+  --blue: #0ea5e9;
+  --bright: #38bdf8;
+  --cyan: #06b6d4;
+  --dim: #0369a1;
+  --white: #f0f6ff;
+  --muted: #7a9bb5;
+  --border: rgba(14,165,233,0.15);
+  --glow: rgba(14,165,233,0.08);
+  --green: #10b981;
+  --red: #ef4444;
+  --yellow: #f59e0b;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; background:var(--black); font-family:'DM Sans',sans-serif; color:var(--white); }
+
+/* CANVAS */
+#bg { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+/* DECK WRAPPER */
+.deck { position:relative; z-index:1; width:100%; height:100vh; overflow:hidden; }
+
+/* SLIDES */
+.slides-wrap { display:flex; height:100vh; transition:transform 0.7s cubic-bezier(0.77,0,0.18,1); will-change:transform; }
+.slide { min-width:100vw; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:60px 80px; position:relative; overflow:hidden; }
+
+/* NAV */
+.nav-bar {
+  position:fixed; bottom:40px; left:50%; transform:translateX(-50%);
+  z-index:100; display:flex; align-items:center; gap:16px;
+  background:rgba(5,12,20,0.85); backdrop-filter:blur(20px);
+  border:1px solid var(--border); border-radius:100px;
+  padding:12px 24px;
+}
+.nav-dots { display:flex; gap:8px; }
+.nav-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:rgba(14,165,233,0.3); cursor:pointer; transition:all 0.3s;
+}
+.nav-dot.active { background:var(--blue); width:20px; border-radius:3px; }
+.nav-btn {
+  background:none; border:1px solid var(--border); color:var(--muted);
+  width:32px; height:32px; border-radius:50%; cursor:pointer;
+  font-size:14px; transition:all 0.3s; display:flex; align-items:center; justify-content:center;
+}
+.nav-btn:hover { border-color:var(--blue); color:var(--bright); }
+.slide-counter { font-size:0.72rem; color:var(--muted); letter-spacing:0.1em; min-width:40px; text-align:center; }
+
+/* SLIDE LABEL */
+.slide-label {
+  font-size:0.68rem; letter-spacing:0.25em; text-transform:uppercase;
+  color:var(--blue); margin-bottom:14px;
+}
+
+/* SLIDE TITLES */
+.slide-title {
+  font-family:'Syne',sans-serif; font-weight:800;
+  font-size:clamp(2.2rem,4.5vw,4rem); line-height:1.05;
+  letter-spacing:-0.02em; margin-bottom:20px;
+}
+.slide-title .grad {
+  background:linear-gradient(90deg,var(--blue),var(--cyan));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.slide-sub {
+  font-size:clamp(0.9rem,1.5vw,1.15rem); color:var(--muted);
+  line-height:1.75; max-width:640px;
+}
+
+/* CARDS */
+.card {
+  background:rgba(5,12,20,0.85); border:1px solid var(--border);
+  border-radius:16px; padding:28px 26px; transition:all 0.3s;
+}
+.card:hover { border-color:rgba(14,165,233,0.35); transform:translateY(-3px); box-shadow:0 20px 50px rgba(14,165,233,0.08); }
+
+/* GRIDS */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:24px; width:100%; max-width:1100px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; width:100%; max-width:1100px; }
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; width:100%; max-width:1100px; }
+
+/* BADGE */
+.badge {
+  display:inline-flex; align-items:center; gap:7px;
+  background:rgba(14,165,233,0.08); border:1px solid rgba(14,165,233,0.25);
+  border-radius:100px; padding:7px 18px;
+  font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--bright);
+  margin-bottom:24px;
+}
+.badge-dot { width:5px; height:5px; background:var(--bright); border-radius:50%; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+/* DIVIDER LINE */
+.h-line { width:60px; height:2px; background:linear-gradient(90deg,var(--blue),var(--cyan)); border-radius:2px; margin-bottom:20px; }
+
+/* ===================== SLIDE 1 — HERO ===================== */
+.s1 { text-align:center; }
+.s1 .hero-title {
+  font-family:'Syne',sans-serif; font-weight:800;
+  font-size:clamp(3.5rem,8vw,7rem); line-height:0.95;
+  letter-spacing:-0.03em; margin-bottom:28px;
+}
+.s1 .hero-title .grad {
+  background:linear-gradient(90deg,var(--blue),var(--cyan),var(--bright));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.s1 .tagline { font-size:clamp(1rem,2vw,1.3rem); color:var(--muted); max-width:580px; margin:0 auto 40px; line-height:1.7; }
+.s1 .hero-meta { display:flex; gap:40px; justify-content:center; margin-top:50px; flex-wrap:wrap; }
+.s1 .meta-item { text-align:center; }
+.s1 .meta-num { font-family:'Syne',sans-serif; font-weight:800; font-size:2rem; background:linear-gradient(135deg,var(--blue),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.s1 .meta-label { font-size:0.72rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-top:4px; }
+.company-tag { font-size:0.75rem; color:var(--muted); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:16px; }
+
+/* ===================== SLIDE 2 — PROBLEM ===================== */
+.problem-grid { display:grid; grid-template-columns:1fr 1fr; gap:32px; width:100%; max-width:1100px; align-items:start; }
+.problem-list { list-style:none; display:flex; flex-direction:column; gap:12px; }
+.problem-item { display:flex; align-items:flex-start; gap:14px; padding:16px 20px; background:rgba(239,68,68,0.05); border:1px solid rgba(239,68,68,0.15); border-radius:12px; }
+.p-icon { width:34px; height:34px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.p-text strong { display:block; font-size:0.88rem; color:var(--white); font-weight:500; margin-bottom:2px; }
+.p-text span { font-size:0.78rem; color:var(--muted); }
+.stat-box { background:rgba(5,12,20,0.9); border:1px solid var(--border); border-radius:20px; padding:36px 30px; text-align:center; }
+.big-stat { font-family:'Syne',sans-serif; font-weight:800; font-size:4rem; background:linear-gradient(135deg,var(--blue),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; }
+.big-stat-label { font-size:0.8rem; color:var(--muted); margin-top:8px; line-height:1.5; }
+.quote-line { font-family:'Syne',sans-serif; font-weight:700; font-size:1.3rem; color:var(--white); margin:24px 0 8px; line-height:1.3; }
+.quote-sub { font-size:0.82rem; color:var(--muted); }
+
+/* ===================== SLIDE 3 — SOLUTION ===================== */
+.solution-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; width:100%; max-width:1100px; margin-top:8px; }
+.sol-card { background:rgba(5,12,20,0.85); border:1px solid var(--border); border-radius:14px; padding:26px 22px; transition:all 0.3s; position:relative; overflow:hidden; }
+.sol-card::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--blue),var(--cyan)); opacity:0; transition:opacity 0.3s; }
+.sol-card:hover { border-color:rgba(14,165,233,0.4); transform:translateY(-4px); }
+.sol-card:hover::after { opacity:1; }
+.sol-num { font-size:0.65rem; letter-spacing:0.2em; color:var(--blue); margin-bottom:12px; opacity:0.7; }
+.sol-icon { font-size:1.8rem; margin-bottom:14px; display:block; }
+.sol-title { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; color:var(--white); margin-bottom:8px; }
+.sol-desc { font-size:0.8rem; color:var(--muted); line-height:1.65; }
+
+/* ===================== SLIDE 4 — ARCHITECTURE ===================== */
+.arch-wrap { display:grid; grid-template-columns:1fr 1fr; gap:50px; width:100%; max-width:1100px; align-items:center; }
+.arch-layers { display:flex; flex-direction:column; gap:6px; }
+.arch-layer { display:flex; align-items:center; gap:16px; padding:20px 24px; border-radius:12px; transition:all 0.3s; cursor:default; }
+.arch-layer:hover { transform:translateX(8px); }
+.al-1 { background:linear-gradient(90deg,rgba(14,165,233,0.15),rgba(14,165,233,0.03)); border-left:3px solid var(--blue); }
+.al-2 { background:linear-gradient(90deg,rgba(6,182,212,0.12),rgba(6,182,212,0.02)); border-left:3px solid var(--cyan); }
+.al-3 { background:linear-gradient(90deg,rgba(16,185,129,0.1),rgba(16,185,129,0.02)); border-left:3px solid var(--green); }
+.al-badge { font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; padding:4px 10px; border-radius:4px; background:rgba(14,165,233,0.1); color:var(--bright); flex-shrink:0; }
+.al-info strong { display:block; font-family:'Syne',sans-serif; font-size:0.95rem; font-weight:700; color:var(--white); margin-bottom:3px; }
+.al-info span { font-size:0.78rem; color:var(--muted); }
+.arch-visual { background:rgba(5,12,20,0.9); border:1px solid var(--border); border-radius:20px; padding:40px 36px; text-align:center; }
+.shift-old { font-family:'Syne',sans-serif; font-weight:700; font-size:1.05rem; color:var(--muted); text-decoration:line-through; margin-bottom:10px; }
+.shift-arrow-big { font-size:2rem; color:var(--dim); margin:8px 0; }
+.shift-new { font-family:'Syne',sans-serif; font-weight:800; font-size:1.6rem; background:linear-gradient(135deg,var(--blue),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.shift-desc { font-size:0.8rem; color:var(--muted); line-height:1.65; margin-top:20px; padding-top:20px; border-top:1px solid var(--border); }
+
+/* ===================== SLIDE 5 — MARKET ===================== */
+.market-center { text-align:center; width:100%; max-width:1000px; }
+.tam-number { font-family:'Syne',sans-serif; font-weight:800; font-size:clamp(4rem,9vw,8rem); background:linear-gradient(135deg,var(--blue),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; margin:16px 0; }
+.era-row { display:flex; align-items:center; justify-content:center; gap:16px; margin:40px auto; flex-wrap:wrap; }
+.era-box { text-align:center; padding:20px 28px; background:rgba(5,12,20,0.85); border:1px solid var(--border); border-radius:14px; min-width:150px; }
+.era-box.now { border-color:rgba(14,165,233,0.5); background:rgba(14,165,233,0.06); }
+.era-tag { font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.era-name { font-family:'Syne',sans-serif; font-weight:700; font-size:1.05rem; }
+.era-name.highlight { font-size:1.3rem; background:linear-gradient(135deg,var(--blue),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.era-arrow { font-size:1.2rem; color:var(--dim); }
+.market-note { font-size:0.88rem; color:var(--muted); max-width:600px; margin:0 auto; line-height:1.7; }
+
+/* ===================== SLIDE 6 — COMPETITION ===================== */
+.comp-wrap { width:100%; max-width:1100px; }
+.comp-table { width:100%; border-collapse:collapse; margin-top:20px; }
+.comp-table th { font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--blue); padding:12px 16px; text-align:left; border-bottom:1px solid var(--border); }
+.comp-table td { padding:14px 16px; font-size:0.85rem; border-bottom:1px solid rgba(255,255,255,0.04); color:var(--muted); }
+.comp-table tr:hover td { background:rgba(14,165,233,0.03); }
+.comp-table td:first-child { font-weight:500; color:var(--white); }
+.comp-table tr.nexa-row td { color:var(--white); background:rgba(14,165,233,0.05); }
+.comp-table tr.nexa-row td:first-child { color:var(--bright); font-weight:700; font-family:'Syne',sans-serif; }
+.check { color:var(--green); font-weight:700; }
+.cross { color:var(--red); }
+.partial { color:var(--yellow); }
+
+/* ===================== SLIDE 7 — BUSINESS MODEL ===================== */
+.biz-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; width:100%; max-width:1100px; }
+.biz-card { background:rgba(5,12,20,0.85); border:1px solid var(--border); border-radius:16px; padding:28px 24px; }
+.biz-phase { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--blue); margin-bottom:6px; }
+.biz-title { font-family:'Syne',sans-serif; font-weight:700; font-size:1.1rem; color:var(--white); margin-bottom:16px; }
+.biz-price { font-family:'Syne',sans-serif; font-weight:800; font-size:1.8rem; background:linear-gradient(135deg,var(--blue),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:12px; }
+.biz-items { list-style:none; display:flex; flex-direction:column; gap:8px; }
+.biz-items li { font-size:0.8rem; color:var(--muted); display:flex; align-items:center; gap:8px; }
+.biz-items li::before { content:''; width:4px; height:4px; background:var(--blue); border-radius:50%; flex-shrink:0; }
+.rev-total { background:rgba(14,165,233,0.06); border:1px solid rgba(14,165,233,0.25); border-radius:16px; padding:28px 32px; margin-top:20px; display:flex; justify-content:space-between; align-items:center; width:100%; max-width:1100px; flex-wrap:wrap; gap:20px; }
+.rev-item { text-align:center; }
+.rev-num { font-family:'Syne',sans-serif; font-weight:800; font-size:1.6rem; background:linear-gradient(135deg,var(--blue),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.rev-label { font-size:0.72rem; color:var(--muted); letter-spacing:0.08em; margin-top:4px; }
+
+/* ===================== SLIDE 8 — TRACTION ===================== */
+.traction-wrap { width:100%; max-width:1100px; }
+.traction-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-bottom:30px; }
+.t-card { background:rgba(5,12,20,0.85); border:1px solid var(--border); border-radius:16px; padding:28px 22px; text-align:center; }
+.t-num { font-family:'Syne',sans-serif; font-weight:800; font-size:2.2rem; background:linear-gradient(135deg,var(--blue),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1.1; margin-bottom:8px; }
+.t-label { font-size:0.75rem; color:var(--muted); letter-spacing:0.08em; line-height:1.4; }
+.milestones { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.milestone { display:flex; align-items:center; gap:12px; padding:14px 18px; background:rgba(16,185,129,0.05); border:1px solid rgba(16,185,129,0.15); border-radius:10px; font-size:0.83rem; color:var(--muted); }
+.m-check { width:22px; height:22px; background:linear-gradient(135deg,var(--green),#059669); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; color:white; flex-shrink:0; }
+
+/* ===================== SLIDE 9 — ROADMAP ===================== */
+.roadmap-wrap { width:100%; max-width:1100px; }
+.rm-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:16px; }
+.rm-card { background:rgba(5,12,20,0.85); border:1px solid var(--border); border-radius:16px; padding:30px 26px; }
+.rm-card.active { border-color:rgba(14,165,233,0.4); background:rgba(14,165,233,0.04); }
+.rm-phase { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--blue); margin-bottom:6px; }
+.rm-time { font-family:'Syne',sans-serif; font-weight:700; font-size:1.2rem; color:var(--white); margin-bottom:18px; }
+.rm-items { list-style:none; display:flex; flex-direction:column; gap:9px; }
+.rm-items li { font-size:0.82rem; color:var(--muted); display:flex; align-items:center; gap:10px; }
+.rm-items li::before { content:''; width:4px; height:4px; background:var(--blue); border-radius:50%; flex-shrink:0; }
+
+/* ===================== SLIDE 10 — TEAM ===================== */
+.team-center { width:100%; max-width:900px; text-align:center; }
+.founder-card { background:rgba(5,12,20,0.85); border:1px solid rgba(14,165,233,0.3); border-radius:24px; padding:50px 60px; display:flex; gap:50px; align-items:center; text-align:left; margin-bottom:30px; }
+.f-avatar { width:90px; height:90px; background:linear-gradient(135deg,var(--blue),var(--cyan)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; font-size:2rem; color:var(--black); flex-shrink:0; box-shadow:0 0 40px rgba(14,165,233,0.3); }
+.f-name { font-family:'Syne',sans-serif; font-weight:800; font-size:1.6rem; color:var(--white); margin-bottom:4px; }
+.f-role { font-size:0.85rem; color:var(--blue); margin-bottom:16px; letter-spacing:0.04em; }
+.f-bio { font-size:0.88rem; color:var(--muted); line-height:1.75; font-style:italic; border-left:2px solid var(--blue); padding-left:16px; }
+.seeking-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.seek-card { background:rgba(5,12,20,0.8); border:1px solid var(--border); border-radius:14px; padding:22px 20px; text-align:center; }
+.seek-icon { font-size:1.8rem; margin-bottom:10px; display:block; }
+.seek-title { font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; color:var(--white); margin-bottom:6px; }
+.seek-desc { font-size:0.77rem; color:var(--muted); line-height:1.6; }
+
+/* ===================== SLIDE 11 — THE ASK ===================== */
+.ask-wrap { width:100%; max-width:1000px; }
+.ask-center { text-align:center; margin-bottom:50px; }
+.ask-amount { font-family:'Syne',sans-serif; font-weight:800; font-size:clamp(3rem,7vw,6rem); background:linear-gradient(135deg,var(--blue),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; margin-bottom:12px; }
+.ask-type { font-size:1.05rem; color:var(--muted); }
+.use-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:30px; }
+.use-item { background:rgba(5,12,20,0.85); border:1px solid var(--border); border-radius:14px; padding:22px 18px; text-align:center; }
+.use-pct { font-family:'Syne',sans-serif; font-weight:800; font-size:1.8rem; background:linear-gradient(135deg,var(--blue),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; }
+.use-label { font-size:0.77rem; color:var(--muted); line-height:1.4; }
+.milestones-row { display:flex; gap:14px; flex-wrap:wrap; }
+.ms-tag { display:inline-flex; align-items:center; gap:7px; padding:9px 16px; background:rgba(14,165,233,0.08); border:1px solid rgba(14,165,233,0.2); border-radius:100px; font-size:0.78rem; color:var(--bright); }
+
+/* ===================== SLIDE 12 — CTA ===================== */
+.cta-slide { text-align:center; }
+.cta-big { font-family:'Syne',sans-serif; font-weight:800; font-size:clamp(2.5rem,6vw,5.5rem); line-height:1.0; letter-spacing:-0.02em; margin-bottom:28px; }
+.cta-big .grad { background:linear-gradient(90deg,var(--blue),var(--cyan),var(--bright)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.cta-sub { font-size:1.05rem; color:var(--muted); max-width:520px; margin:0 auto 48px; line-height:1.75; }
+.contact-cards { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin-bottom:40px; }
+.contact-card { background:rgba(5,12,20,0.85); border:1px solid var(--border); border-radius:16px; padding:24px 32px; text-align:center; min-width:200px; transition:all 0.3s; }
+.contact-card:hover { border-color:rgba(14,165,233,0.4); transform:translateY(-3px); }
+.contact-icon { font-size:1.8rem; margin-bottom:10px; }
+.contact-label { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.contact-value { font-size:0.9rem; color:var(--bright); font-weight:500; }
+.final-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(14,165,233,0.08); border:1px solid rgba(14,165,233,0.25); border-radius:100px; padding:10px 24px; font-size:0.8rem; color:var(--bright); letter-spacing:0.08em; }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+.slide.active .anim-1 { animation:fadeUp 0.6s 0.1s ease both; }
+.slide.active .anim-2 { animation:fadeUp 0.6s 0.25s ease both; }
+.slide.active .anim-3 { animation:fadeUp 0.6s 0.4s ease both; }
+.slide.active .anim-4 { animation:fadeUp 0.6s 0.55s ease both; }
+.slide.active .anim-5 { animation:fadeUp 0.6s 0.7s ease both; }
+
+/* PROGRESS BAR */
+.progress-bar { position:fixed; top:0; left:0; height:2px; background:linear-gradient(90deg,var(--blue),var(--cyan)); z-index:200; transition:width 0.5s ease; }
+
+/* KEYBOARD HINT */
+.key-hint { position:fixed; top:24px; right:24px; z-index:100; font-size:0.68rem; color:var(--muted); letter-spacing:0.1em; display:flex; align-items:center; gap:8px; }
+.key { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:5px; padding:3px 8px; font-size:0.65rem; color:var(--muted); }
+
+/* LOGO WATERMARK */
+.slide-watermark { position:absolute; bottom:90px; left:50%; transform:translateX(-50%); font-family:'Syne',sans-serif; font-weight:800; font-size:0.7rem; letter-spacing:0.2em; color:rgba(14,165,233,0.15); text-transform:uppercase; white-space:nowrap; }
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+<div class="progress-bar" id="progress"></div>
+<div class="key-hint">
+  <span class="key">←</span><span class="key">→</span> navigate &nbsp;|&nbsp; <span class="key">F</span> fullscreen
+</div>
+
+<div class="deck">
+<div class="slides-wrap" id="slider">
+
+<!-- ===== SLIDE 1: HERO ===== -->
+<div class="slide s1 active">
+  <div class="company-tag anim-1">Infinixa · Confidential Investor Deck · 2025</div>
+  <div class="badge anim-1"><span class="badge-dot"></span> Seed Stage · USA · AI-Native OS</div>
+  <h1 class="hero-title anim-2">NEXA<br><span class="grad">OS</span></h1>
+  <p class="tagline anim-3">The world's first AI-native operating system — the Intelligence Layer for every device. Built for intent, not apps.</p>
+  <div class="hero-meta anim-4">
+    <div class="meta-item"><div class="meta-num">1.5B+</div><div class="meta-label">Target Users</div></div>
+    <div class="meta-item"><div class="meta-num">$500B+</div><div class="meta-label">TAM (OS Market)</div></div>
+    <div class="meta-item"><div class="meta-num">40%</div><div class="meta-label">Productivity Lost</div></div>
+    <div class="meta-item"><div class="meta-num">0</div><div class="meta-label">True AI OS Today</div></div>
+  </div>
+  <div class="slide-watermark">Nexa OS · Infinixa © 2025</div>
+</div>
+
+<!-- ===== SLIDE 2: PROBLEM ===== -->
+<div class="slide">
+  <div class="problem-grid">
+    <div>
+      <p class="slide-label anim-1">The Problem</p>
+      <div class="h-line anim-1"></div>
+      <h2 class="slide-title anim-2">Today's OS was never built for <span class="grad">AI.</span></h2>
+      <p class="slide-sub anim-2" style="margin-bottom:24px;">Operating systems were designed for files, folders, and apps — not human intent or autonomous intelligence. The result is massive, measurable friction.</p>
+      <ul class="problem-list anim-3">
+        <li class="problem-item"><div class="p-icon">⚡</div><div class="p-text"><strong>Constant App Switching</strong><span>40–60% of employee time wasted across 100+ disconnected tools</span></div></li>
+        <li class="problem-item"><div class="p-icon">🔒</div><div class="p-text"><strong>Fragmented Data</strong><span>Company knowledge siloed across Slack, Drive, Notion — invisible to AI</span></div></li>
+        <li class="problem-item"><div class="p-icon">🧠</div><div class="p-text"><strong>No Context or Memory</strong><span>AI tools start from zero every session — no goals, no history, no continuity</span></div></li>
+        <li class="problem-item"><div class="p-icon">🛡️</div><div class="p-text"><strong>Privacy Constantly at Risk</strong><span>Data flows through dozens of third-party apps with zero unified protection</span></div></li>
+      </ul>
+    </div>
+    <div class="stat-box anim-4" style="display:flex;flex-direction:column;justify-content:center;gap:20px;">
+      <div><div class="big-stat">$650B</div><div class="big-stat-label">Annual productivity loss globally<br>due to fragmented software workflows</div></div>
+      <div style="height:1px;background:var(--border);"></div>
+      <div><div class="big-stat">100+</div><div class="big-stat-label">Tools the average enterprise<br>uses daily — none connected</div></div>
+      <div style="height:1px;background:var(--border);"></div>
+      <div class="quote-line">"Software scaled.<br>Execution didn't."</div>
+      <div class="quote-sub">Modern companies are drowning in software — but starving for intelligence.</div>
+    </div>
+  </div>
+  <div class="slide-watermark">Nexa OS · Infinixa © 2025</div>
+</div>
+
+<!-- ===== SLIDE 3: SOLUTION ===== -->
+<div class="slide">
+  <div style="width:100%;max-width:1100px;">
+    <p class="slide-label anim-1">The Solution</p>
+    <div class="h-line anim-1"></div>
+    <h2 class="slide-title anim-2">Nexa OS — <span class="grad">The Intelligence Layer</span></h2>
+    <p class="slide-sub anim-2" style="margin-bottom:24px;">Not another app. Not a chatbot plugin. A fundamental reimagining of the operating system — AI-native from first principles, built for intent and autonomous execution.</p>
+    <div class="solution-cards anim-3">
+      <div class="sol-card"><span class="sol-num">01</span><span class="sol-icon">🎯</span><div class="sol-title">Intent-Driven Interface</div><p class="sol-desc">Tell the OS what you want. It understands goals — not commands — and orchestrates every tool, agent, and data source automatically.</p></div>
+      <div class="sol-card"><span class="sol-num">02</span><span class="sol-icon">🤖</span><div class="sol-title">Autonomous AI Employees</div><p class="sol-desc">Deploy AI Sales, HR, Finance, and PM agents. Future companies: 1 human, multiple AI agents running operations end-to-end.</p></div>
+      <div class="sol-card"><span class="sol-num">03</span><span class="sol-icon">🏛️</span><div class="sol-title">Corporate Memory Brain</div><p class="sol-desc">All company data becomes a living, queryable brain. Ask "Why did we reject that deal in 2023?" — get an instant, accurate answer.</p></div>
+      <div class="sol-card"><span class="sol-num">04</span><span class="sol-icon">⚡</span><div class="sol-title">Workflow Automation Engine</div><p class="sol-desc">No-code automation baked at OS level. "Deal closes → invoice → notify finance → start onboarding." Fully automatic.</p></div>
+      <div class="sol-card"><span class="sol-num">05</span><span class="sol-icon">🔐</span><div class="sol-title">Privacy-First Architecture</div><p class="sol-desc">On-device AI. Private company models. Local-first secure data layer. Your data never leaves your control — by design.</p></div>
+      <div class="sol-card"><span class="sol-num">06</span><span class="sol-icon">📡</span><div class="sol-title">Predictive Intelligence</div><p class="sol-desc">Proactive alerts: "Churn risk detected." "Hiring delay pushes launch 6 weeks." Decision intelligence, not just dashboards.</p></div>
+    </div>
+  </div>
+  <div class="slide-watermark">Nexa OS · Infinixa © 2025</div>
+</div>
+
+<!-- ===== SLIDE 4: ARCHITECTURE ===== -->
+<div class="slide">
+  <div class="arch-wrap">
+    <div>
+      <p class="slide-label anim-1">System Architecture</p>
+      <div class="h-line anim-1"></div>
+      <h2 class="slide-title anim-2">Three Layers.<br>One <span class="grad">Intelligent System.</span></h2>
+      <p class="slide-sub anim-2" style="margin-bottom:28px;">Instead of users managing software — the system manages complexity for the user.</p>
+      <div class="arch-layers anim-3">
+        <div class="arch-layer al-1"><div class="al-badge">Layer 1</div><div class="al-info"><strong>Intent Layer</strong><span>Understands user goals, desired outcomes, and context in natural language</span></div></div>
+        <div class="arch-layer al-2"><div class="al-badge">Layer 2</div><div class="al-info"><strong>Context Layer</strong><span>Maintains persistent memory of work, projects, decisions, and environment</span></div></div>
+        <div class="arch-layer al-3"><div class="al-badge">Layer 3</div><div class="al-info"><strong>Workflow Layer</strong><span>Dynamically orchestrates tools, AI agents, data, and automated actions</span></div></div>
+      </div>
+    </div>
+    <div class="arch-visual anim-4">
+      <div class="shift-old">Interface-First Computing</div>
+      <div class="shift-arrow-big">↓</div>
+      <div class="shift-new">Intent-First Computing</div>
+      <div class="shift-desc">The same generational leap as:<br><br>Command Line → GUI → Desktop → Mobile<br><br><strong style="color:var(--white);">We are building Era 4.</strong><br><br>The OS layer — the most foundational software on earth — has remained unchanged while AI transformed everything above it. Until now.</div>
+    </div>
+  </div>
+  <div class="slide-watermark">Nexa OS · Infinixa © 2025</div>
+</div>
+
+<!-- ===== SLIDE 5: MARKET SIZE ===== -->
+<div class="slide">
+  <div class="market-center">
+    <p class="slide-label anim-1">Market Opportunity</p>
+    <div class="h-line anim-1" style="margin:0 auto 14px;"></div>
+    <h2 class="slide-title anim-2">A <span class="grad">$500B+</span> Platform Shift</h2>
+    <div class="tam-number anim-2">$500B+</div>
+    <p class="slide-sub anim-2" style="margin:0 auto 24px;">Global OS & enterprise productivity market. 1.5B+ daily active OS users. AI is transforming software — but the OS itself remains unchanged.</p>
+    <div class="era-row anim-3">
+      <div class="era-box"><div class="era-tag">1970s</div><div class="era-name">Command Line</div></div>
+      <div class="era-arrow">→</div>
+      <div class="era-box"><div class="era-tag">1980s</div><div class="era-name">GUI</div></div>
+      <div class="era-arrow">→</div>
+      <div class="era-box"><div class="era-tag">2000s</div><div class="era-name">Mobile OS</div></div>
+      <div class="era-arrow">→</div>
+      <div class="era-box now"><div class="era-tag">Now — 2025</div><div class="era-name highlight">Intent OS ★</div></div>
+    </div>
+    <p class="market-note anim-4">Each computing era created trillion-dollar companies. <strong style="color:var(--white);">The company that owns the AI-native OS layer will define the next 30 years of computing.</strong></p>
+  </div>
+  <div class="slide-watermark">Nexa OS · Infinixa © 2025</div>
+</div>
+
+<!-- ===== SLIDE 6: COMPETITION ===== -->
+<div class="slide">
+  <div class="comp-wrap">
+    <p class="slide-label anim-1">Competitive Landscape</p>
+    <div class="h-line anim-1"></div>
+    <h2 class="slide-title anim-2">Why <span class="grad">No One</span> Has Built This Yet.</h2>
+    <table class="comp-table anim-3">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>AI-Native OS</th>
+          <th>Intent-Driven</th>
+          <th>Privacy-First</th>
+          <th>Agent Orchestration</th>
+          <th>Cross-Device</th>
+          <th>Corporate Memory</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="nexa-row">
+          <td>⬡ Nexa OS</td>
+          <td><span class="check">✓ Yes</span></td>
+          <td><span class="check">✓ Yes</span></td>
+          <td><span class="check">✓ Yes</span></td>
+          <td><span class="check">✓ Yes</span></td>
+          <td><span class="check">✓ Yes</span></td>
+          <td><span class="check">✓ Yes</span></td>
+        </tr>
+        <tr>
+          <td>Windows 11 + Copilot</td>
+          <td><span class="cross">✗ Retrofitted</span></td>
+          <td><span class="cross">✗ No</span></td>
+          <td><span class="cross">✗ No</span></td>
+          <td><span class="partial">~ Partial</span></td>
+          <td><span class="partial">~ Limited</span></td>
+          <td><span class="cross">✗ No</span></td>
+        </tr>
+        <tr>
+          <td>macOS + Apple Intelligence</td>
+          <td><span class="cross">✗ Retrofitted</span></td>
+          <td><span class="cross">✗ No</span></td>
+          <td><span class="check">✓ Yes</span></td>
+          <td><span class="cross">✗ No</span></td>
+          <td><span class="partial">~ Apple only</span></td>
+          <td><span class="cross">✗ No</span></td>
+        </tr>
+        <tr>
+          <td>Notion AI / Slack AI</td>
+          <td><span class="cross">✗ App-level only</span></td>
+          <td><span class="partial">~ Limited</span></td>
+          <td><span class="cross">✗ No</span></td>
+          <td><span class="cross">✗ No</span></td>
+          <td><span class="cross">✗ No</span></td>
+          <td><span class="partial">~ Partial</span></td>
+        </tr>
+        <tr>
+          <td>Rabbit R1 / Humane Pin</td>
+          <td><span class="partial">~ Hardware-only</span></td>
+          <td><span class="partial">~ Limited</span></td>
+          <td><span class="cross">✗ No</span></td>
+          <td><span class="cross">✗ No</span></td>
+          <td><span class="cross">✗ No</span></td>
+          <td><span class="cross">✗ No</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:20px;padding:16px 20px;background:rgba(14,165,233,0.06);border:1px solid rgba(14,165,233,0.2);border-radius:12px;font-size:0.85rem;color:var(--muted);max-width:100%;anim-4">
+      <strong style="color:var(--bright);">Our moat:</strong> Nexa OS is the only platform built AI-native from first principles — not retrofitted onto legacy architecture. We own the OS layer, not just an app on top of it.
+    </div>
+  </div>
+  <div class="slide-watermark">Nexa OS · Infinixa © 2025</div>
+</div>
+
+<!-- ===== SLIDE 7: BUSINESS MODEL ===== -->
+<div class="slide">
+  <div style="width:100%;max-width:1100px;">
+    <p class="slide-label anim-1">Business Model</p>
+    <div class="h-line anim-1"></div>
+    <h2 class="slide-title anim-2">Platform Revenue.<br><span class="grad">Multiple Streams.</span></h2>
+    <div class="biz-grid anim-3">
+      <div class="biz-card" style="border-color:rgba(14,165,233,0.3);">
+        <div class="biz-phase">Phase 1 · 0–12 months</div>
+        <div class="biz-title">Consumer + Pro</div>
+        <div class="biz-price">$19/mo</div>
+        <ul class="biz-items">
+          <li>Personal Nexa OS license</li>
+          <li>AI assistant + task orchestration</li>
+          <li>Private local-first storage</li>
+          <li>Early access community</li>
+        </ul>
+      </div>
+      <div class="biz-card">
+        <div class="biz-phase">Phase 2 · 6–18 months</div>
+        <div class="biz-title">Enterprise</div>
+        <div class="biz-price">$99/seat/mo</div>
+        <ul class="biz-items">
+          <li>Full corporate memory brain</li>
+          <li>Autonomous AI employee agents</li>
+          <li>Custom workflow automation</li>
+          <li>Secure on-premise deployment</li>
+        </ul>
+      </div>
+      <div class="biz-card">
+        <div class="biz-phase">Phase 3 · 12–24 months</div>
+        <div class="biz-title">Platform & Marketplace</div>
+        <div class="biz-price">30% rev share</div>
+        <ul class="biz-items">
+          <li>AI Agent Marketplace</li>
+          <li>Developer API access fees</li>
+          <li>Partner integration revenue</li>
+          <li>Device OEM licensing</li>
+        </ul>
+      </div>
+    </div>
+    <div class="rev-total anim-4">
+      <div class="rev-item"><div class="rev-num">$2M+</div><div class="rev-label">Year 1 ARR Target</div></div>
+      <div class="rev-item"><div class="rev-num">$20M+</div><div class="rev-label">Year 2 ARR Target</div></div>
+      <div class="rev-item"><div class="rev-num">$100M+</div><div class="rev-label">Year 3 ARR Target</div></div>
+      <div class="rev-item"><div class="rev-num">85%+</div><div class="rev-label">Gross Margin (SaaS)</div></div>
+    </div>
+  </div>
+  <div class="slide-watermark">Nexa OS · Infinixa © 2025</div>
+</div>
+
+<!-- ===== SLIDE 8: TRACTION ===== -->
+<div class="slide">
+  <div class="traction-wrap">
+    <p class="slide-label anim-1">Traction & Validation</p>
+    <div class="h-line anim-1"></div>
+    <h2 class="slide-title anim-2">Early Signal.<br><span class="grad">Real Momentum.</span></h2>
+    <div class="traction-grid anim-3">
+      <div class="t-card"><div class="t-num">Live</div><div class="t-label">Landing page &amp; early access funnel deployed</div></div>
+      <div class="t-card"><div class="t-num">7</div><div class="t-label">Investor-grade pitch deck slides completed</div></div>
+      <div class="t-card"><div class="t-num">MVP</div><div class="t-label">Phase 1 architecture &amp; system design in progress</div></div>
+      <div class="t-card"><div class="t-num">0→1</div><div class="t-label">Founder-led build — independent deep-tech conviction</div></div>
+    </div>
+    <div class="milestones anim-4">
+      <div class="milestone"><div class="m-check">✓</div>Vision, architecture & 3-layer system design defined</div>
+      <div class="milestone"><div class="m-check">✓</div>Landing page live at krishhn.com — early access open</div>
+      <div class="milestone"><div class="m-check">✓</div>Corporate & consumer use cases validated</div>
+      <div class="milestone"><div class="m-check">✓</div>Pitch deck & investor materials ready</div>
+      <div class="milestone" style="border-color:rgba(14,165,233,0.25);background:rgba(14,165,233,0.05);"><div style="width:22px;height:22px;border:2px solid var(--blue);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0;"></div>Nexa Assistant MVP — in active development</div>
+      <div class="milestone" style="border-color:rgba(14,165,233,0.25);background:rgba(14,165,233,0.05);"><div style="width:22px;height:22px;border:2px solid var(--blue);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0;"></div>Seeking seed round — US investors &amp; co-founder</div>
+    </div>
+  </div>
+  <div class="slide-watermark">Nexa OS · Infinixa © 2025</div>
+</div>
+
+<!-- ===== SLIDE 9: ROADMAP ===== -->
+<div class="slide" id="roadmap">
+  <div class="roadmap-wrap">
+    <p class="slide-label anim-1">Roadmap</p>
+    <div class="h-line anim-1"></div>
+    <h2 class="slide-title anim-2">Clarity Before Scale.<br><span class="grad">Depth Before Speed.</span></h2>
+    <div class="rm-grid anim-3">
+      <div class="rm-card active">
+        <div class="rm-phase">Phase 1 · NOW</div>
+        <div class="rm-time">MVP — 0 to 3 Months</div>
+        <ul class="rm-items">
+          <li>Nexa Assistant AI command interface</li>
+          <li>Smart task & workflow orchestration</li>
+          <li>Personal productivity use case</li>
+          <li>Private local-first architecture</li>
+          <li>Early access onboarding &amp; feedback</li>
+          <li>Seed round fundraising</li>
+        </ul>
+      </div>
+      <div class="rm-card">
+        <div class="rm-phase">Phase 2</div>
+        <div class="rm-time">Beta Platform — 3 to 9 Months</div>
+        <ul class="rm-items">
+          <li>Multi-agent system deployment</li>
+          <li>Cross-app automation layer</li>
+          <li>Developer API &amp; SDK access</li>
+          <li>Secure enterprise data layer</li>
+          <li>Corporate memory brain beta</li>
+          <li>Series A preparation</li>
+        </ul>
+      </div>
+      <div class="rm-card">
+        <div class="rm-phase">Phase 3</div>
+        <div class="rm-time">Platform Scale — 9 to 18 Months</div>
+        <ul class="rm-items">
+          <li>Nexa OS for enterprises &amp; teams</li>
+          <li>Device-level OS integrations</li>
+          <li>AI Agent Marketplace launch</li>
+          <li>Global expansion — USA first</li>
+          <li>OEM partnership discussions</li>
+          <li>Series A close</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="slide-watermark">Nexa OS · Infinixa © 2025</div>
+</div>
+
+<!-- ===== SLIDE 10: TEAM ===== -->
+<div class="slide">
+  <div class="team-center">
+    <p class="slide-label anim-1">Team</p>
+    <div class="h-line anim-1" style="margin:0 auto 14px;"></div>
+    <h2 class="slide-title anim-2">Founder-Led.<br><span class="grad">Conviction-Driven.</span></h2>
+    <div class="founder-card anim-3">
+      <div class="f-avatar">K</div>
+      <div>
+        <div class="f-name">Krishna</div>
+        <div class="f-role">Founder & CEO · Infinixa · AI Systems & OS Architecture · India → USA</div>
+        <p class="f-bio">"We added AI to apps — but never reimagined the OS itself. Current computing is fundamentally misaligned with how humans actually think and work. Nexa OS is my long-term conviction: not a trend-chasing product, but a first-principles reimagination of computing for the AI era."</p>
+      </div>
+    </div>
+    <div class="seeking-grid anim-4">
+      <div class="seek-card"><span class="seek-icon">🤝</span><div class="seek-title">Technical Co-Founder</div><p class="seek-desc">Systems engineer or AI researcher based in USA — to co-build the core OS architecture and lead engineering.</p></div>
+      <div class="seek-card"><span class="seek-icon">📈</span><div class="seek-title">GTM Co-Founder</div><p class="seek-desc">Growth-focused operator in USA — to lead enterprise sales, investor relations, and US market expansion.</p></div>
+      <div class="seek-card" style="border-color:rgba(14,165,233,0.3);"><span class="seek-icon">💼</span><div class="seek-title">Seed Investors</div><p class="seek-desc">Visionary investors who've backed platform shifts — not just apps. This is the Android moment for AI-native OS.</p></div>
+    </div>
+  </div>
+  <div class="slide-watermark">Nexa OS · Infinixa © 2025</div>
+</div>
+
+<!-- ===== SLIDE 11: THE ASK ===== -->
+<div class="slide">
+  <div class="ask-wrap">
+    <p class="slide-label anim-1" style="text-align:center;">The Ask</p>
+    <div class="h-line anim-1" style="margin:0 auto 14px;"></div>
+    <div class="ask-center anim-2">
+      <div class="ask-amount">$500K – $1M</div>
+      <div class="ask-type">Seed Round · Equity · USA-focused</div>
+    </div>
+    <div class="use-grid anim-3">
+      <div class="use-item"><div class="use-pct">35%</div><div class="use-label">Product Development<br>MVP + Core Architecture</div></div>
+      <div class="use-item"><div class="use-pct">25%</div><div class="use-label">Team Building<br>Technical Hires</div></div>
+      <div class="use-item"><div class="use-pct">25%</div><div class="use-label">GTM & User Acquisition<br>USA Market Entry</div></div>
+      <div class="use-item"><div class="use-pct">15%</div><div class="use-label">Operations & Legal<br>US Entity Setup</div></div>
+    </div>
+    <div style="margin-top:20px;">
+      <p style="font-size:0.78rem;color:var(--muted);text-align:center;margin-bottom:14px;letter-spacing:0.1em;text-transform:uppercase;">What this capital unlocks:</p>
+      <div class="milestones-row anim-4" style="justify-content:center;">
+        <div class="ms-tag">✓ Working MVP in 3 months</div>
+        <div class="ms-tag">✓ 1,000 beta users</div>
+        <div class="ms-tag">✓ US legal entity formed</div>
+        <div class="ms-tag">✓ Technical co-founder hired</div>
+        <div class="ms-tag">✓ Series A readiness in 12 months</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-watermark">Nexa OS · Infinixa © 2025</div>
+</div>
+
+<!-- ===== SLIDE 12: CTA ===== -->
+<div class="slide cta-slide">
+  <div class="badge anim-1"><span class="badge-dot"></span> The Next Computing Era Starts Now</div>
+  <h2 class="cta-big anim-2">Join Us in Building<br>the <span class="grad">Future OS.</span></h2>
+  <p class="cta-sub anim-3">The company that owns the AI-native OS layer will define the next 30 years of computing. We are building it. We are looking for believers.</p>
+  <div class="contact-cards anim-4">
+    <div class="contact-card">
+      <div class="contact-icon">📧</div>
+      <div class="contact-label">Email</div>
+      <div class="contact-value">info@krishhn.com</div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🌐</div>
+      <div class="contact-label">Website</div>
+      <div class="contact-value">krishhn.com</div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🏢</div>
+      <div class="contact-label">Company</div>
+      <div class="contact-value">Infinixa · USA</div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">👤</div>
+      <div class="contact-label">Founder</div>
+      <div class="contact-value">Krishna</div>
+    </div>
+  </div>
+  <div class="final-badge anim-5">⬡ NEXA OS · Confidential · © Infinixa 2025</div>
+</div>
+
+</div><!-- end slides-wrap -->
+</div><!-- end deck -->
+
+<!-- NAV BAR -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prev-btn">←</button>
+  <div class="nav-dots" id="nav-dots"></div>
+  <button class="nav-btn" id="next-btn">→</button>
+  <div class="slide-counter" id="counter">1 / 12</div>
+</div>
+
+<style>
+@keyframes spin { to { transform:rotate(360deg); } }
+</style>
+
+<script>
+// PARTICLE BG
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+class P {
+  constructor() { this.reset(); }
+  reset() { this.x = Math.random()*W; this.y = Math.random()*H; this.vx=(Math.random()-.5)*.25; this.vy=(Math.random()-.5)*.25; this.r=Math.random()*1.5+.3; this.a=Math.random()*.4+.05; }
+  update() { this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>W||this.y<0||this.y>H) this.reset(); }
+  draw() { ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=`rgba(14,165,233,${this.a})`; ctx.fill(); }
+}
+for(let i=0;i<70;i++) particles.push(new P());
+function drawLines() {
+  for(let i=0;i<particles.length;i++) for(let j=i+1;j<particles.length;j++) {
+    const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y, d=Math.sqrt(dx*dx+dy*dy);
+    if(d<110) { ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(particles[j].x,particles[j].y); ctx.strokeStyle=`rgba(14,165,233,${.07*(1-d/110)})`; ctx.lineWidth=.5; ctx.stroke(); }
+  }
+}
+(function loop(){ ctx.clearRect(0,0,W,H); particles.forEach(p=>{p.update();p.draw();}); drawLines(); requestAnimationFrame(loop); })();
+
+// SLIDER
+const TOTAL = 12;
+let cur = 0;
+const slider = document.getElementById('slider');
+const progress = document.getElementById('progress');
+const counter = document.getElementById('counter');
+const dotsWrap = document.getElementById('nav-dots');
+const slides = document.querySelectorAll('.slide');
+
+// Build dots
+for(let i=0;i<TOTAL;i++){
+  const d = document.createElement('div');
+  d.className = 'nav-dot' + (i===0?' active':'');
+  d.addEventListener('click',()=>goTo(i));
+  dotsWrap.appendChild(d);
+}
+
+function goTo(n) {
+  if(n < 0 || n >= TOTAL) return;
+  slides[cur].classList.remove('active');
+  cur = n;
+  slider.style.transform = `translateX(-${cur * 100}vw)`;
+  slides[cur].classList.add('active');
+  // Reset animations
+  slides[cur].querySelectorAll('[class*="anim-"]').forEach(el => {
+    el.style.animation = 'none';
+    el.offsetHeight;
+    el.style.animation = '';
+  });
+  document.querySelectorAll('.nav-dot').forEach((d,i) => d.classList.toggle('active', i===cur));
+  counter.textContent = `${cur+1} / ${TOTAL}`;
+  progress.style.width = `${((cur+1)/TOTAL)*100}%`;
+}
+
+document.getElementById('next-btn').addEventListener('click', () => goTo(cur+1));
+document.getElementById('prev-btn').addEventListener('click', () => goTo(cur-1));
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(cur+1);
+  if(e.key === 'ArrowLeft' || e.key === 'ArrowUp') goTo(cur-1);
+  if(e.key === 'f' || e.key === 'F') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+});
+
+// Touch / swipe
+let tx = 0;
+document.addEventListener('touchstart', e => tx = e.touches[0].clientX);
+document.addEventListener('touchend', e => {
+  const diff = tx - e.changedTouches[0].clientX;
+  if(Math.abs(diff) > 50) diff > 0 ? goTo(cur+1) : goTo(cur-1);
+});
+
+// Init
+goTo(0);
+progress.style.width = `${(1/TOTAL)*100}%`;
+</script>
+</body>
+</html>
